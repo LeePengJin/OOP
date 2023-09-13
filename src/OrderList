@@ -1,0 +1,91 @@
+import java.sql.*;
+
+public class OrderList {
+    //data members
+    private String toyName;
+    private int toyQuantity;
+    private double totalPayment;
+
+    //constructor
+    public OrderList(){
+        this("",0,0.0);
+    }
+    public OrderList(String toyName, int toyQuantity, double totalPayment){
+        this.toyName = toyName;
+        this.toyQuantity = toyQuantity;
+        this.totalPayment = totalPayment;
+    }
+
+    //getter
+    public String getToyName() {
+        return toyName;
+    }
+    public int getToyQuantity() {
+        return toyQuantity;
+    }
+    public double getTotalPayment() {
+        return totalPayment;
+    }
+
+    //setter
+    public void setToyName(String toyName) {
+        this.toyName = toyName;
+    }
+    public void setToyQuantity(int toyQuantity) {
+        this.toyQuantity = toyQuantity;
+    }
+    public void setTotalPayment(double totalPayment) {
+        this.totalPayment = totalPayment;
+    }
+
+    // Method to find toyPrice from the database based on toyID
+    public static double getToyPrice(String toyID) throws SQLException, ClassNotFoundException {
+        String driverClassName = "com.mysql.cj.jdbc.Driver";
+        String url = "jdbc:mysql://localhost:3306/oop";
+        String username = "root";
+        String password = "";
+
+        // Load driver class
+        Class.forName(driverClassName);
+
+        // Obtain a connection
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        // Execute query to retrieve toyPrice based on toyID
+        PreparedStatement statement = con.prepareStatement("SELECT toyPrice FROM toy WHERE toyId = ?");
+        statement.setString(1, toyID);
+        ResultSet rs = statement.executeQuery();
+
+        double toyPrice = 0.0;
+
+        while (rs.next()) {
+            toyPrice = rs.getDouble("toyPrice");
+        }
+
+        return toyPrice;
+    }
+
+    public static double calculateTotalPayment(double[] newToyPrice, int[] toyQuantity, int index) {
+        double totalPayment = 0.0;
+
+        for (int i = 0; i < index; i++) {
+            totalPayment += newToyPrice[i] * toyQuantity[i];
+        }
+
+        return totalPayment;
+
+    }
+
+    public void displayTotalAmount() {
+        System.out.println("Total Amount: RM" + totalPayment);
+    }
+
+    public void displayOrder(){
+        Toy[] toysSelected = new Toy[0];
+        double[] newToyPrice = new double[0];
+        int[] toyQuantity = new int[0];
+        int index = 0;
+        Toy.passToPayment(toysSelected, newToyPrice,toyQuantity,index);
+    }
+
+}
