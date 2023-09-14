@@ -438,7 +438,7 @@ public class Staff extends Person{
         String username = "root";
         String password = "";
         String query
-                = "UPDATE staff SET password = ? WHERE icNum = ?";
+                = "UPDATE staff SET stafFPassword = ? WHERE icNum = ?";
 
         // Load driver class
         Class.forName(driverClassName);

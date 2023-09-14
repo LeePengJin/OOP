@@ -288,7 +288,7 @@ public class Member extends Person {
             ps_member.setString(1, newMember.get(i).getMemId());
             ps_member.setDouble(2, newMember.get(i).getTotalSpend());
             ps_member.setDouble(3, newMember.get(i).getStorePointRate());
-            ps_member.setInt(3, newMember.get(i).getStorePoint());
+            ps_member.setInt(4, newMember.get(i).getStorePoint());
             ps_member.setString(5, newMember.get(i).getIcNum());
         }
 

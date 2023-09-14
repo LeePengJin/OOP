@@ -47,13 +47,23 @@ public class StaffDriver {
         System.out.println("===========================================================================================================================================================================================================================");
 
         int staffChoice = 1;
+        boolean validInput = false;
         do {
-            System.out.println("\n1. Edit Staff");
-            System.out.println("2. Add Staff");
-            System.out.println("3. Delete Staff");
-            System.out.println("0. Back To Menu");
-            System.out.print("Select Your Next Step: ");
-            staffChoice = displayStaff_input.nextInt();
+            while (!validInput) {
+                System.out.println("\n1. Edit Staff");
+                System.out.println("2. Add Staff");
+                System.out.println("3. Delete Staff");
+                System.out.println("0. Back To Menu");
+                System.out.print("Select Your Next Step: ");
+                try {
+                    staffChoice = displayStaff_input.nextInt();
+                    validInput = true;
+                } catch (java.util.InputMismatchException e) {
+                    // Handle the exception if the input is not an integer
+                    System.out.println("Invalid input. Please enter an integer.");
+                    displayStaff_input.nextLine();
+                }
+            }
 
             if (staffChoice >= 0 && staffChoice <= 3) {
                 switch (staffChoice) {
@@ -86,48 +96,58 @@ public class StaffDriver {
         int staffChoice = 1;
         int validationChoice = 0;
         int validationSwitch = 0;
+        boolean validInput = false;
         do {
             validationChoice = 0;
             validationSwitch = 0;
-            System.out.println("\nStaff Menu");
-            System.out.println("===========================");
-            System.out.println("1. View Member");
-            System.out.println("2. Make Order");
-            System.out.println("3. View Payment Record");
-            System.out.println("4. Change Account Password");
-            System.out.println("5. Reload GiftCard");
-            System.out.println("6. Refund");
+            while (!validInput) {
+                System.out.println("\nStaff Menu");
+                System.out.println("===========================");
+                System.out.println("1. View Member");
+                System.out.println("2. Make Order");
+                System.out.println("3. View Payment Record");
+                System.out.println("4. Change Account Password");
+                System.out.println("5. Reload GiftCard");
+                System.out.println("6. Refund");
 
-            ArrayList<String> staffPositionDatabase = new ArrayList<>();
-            ArrayList<String> staffIdDatabase = new ArrayList<>();
-            ArrayList<Staff> staffDatabase;
-            try {
-                staffDatabase = staff.getStaffDatabase();
-            } catch (SQLException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+                ArrayList<String> staffPositionDatabase = new ArrayList<>();
+                ArrayList<String> staffIdDatabase = new ArrayList<>();
+                ArrayList<Staff> staffDatabase;
+                try {
+                    staffDatabase = staff.getStaffDatabase();
+                } catch (SQLException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
 
-            for (Staff sd : staffDatabase) {
-                staffIdDatabase.add(sd.getStaffId());
-            }
+                for (Staff sd : staffDatabase) {
+                    staffIdDatabase.add(sd.getStaffId());
+                }
 
-            for (Staff sd : staffDatabase) {
-                staffPositionDatabase.add(sd.getPosition());
-            }
+                for (Staff sd : staffDatabase) {
+                    staffPositionDatabase.add(sd.getPosition());
+                }
 
-            for (int i = 0; i < staffPositionDatabase.size(); i++) {
-                if (staffIdDatabase.get(i).equals(staffId_menu)) {
-                    if (staffPositionDatabase.get(i).equals("Admin")) {
-                        System.out.println("7. View Staff");
-                        System.out.println("8. View Toys");
-                        validationChoice = 1;
+                for (int i = 0; i < staffPositionDatabase.size(); i++) {
+                    if (staffIdDatabase.get(i).equals(staffId_menu)) {
+                        if (staffPositionDatabase.get(i).equals("Admin")) {
+                            System.out.println("7. View Staff");
+                            System.out.println("8. View Toys");
+                            validationChoice = 1;
+                        }
                     }
                 }
-            }
 
-            System.out.println("0. Log Out");
-            System.out.print("Enter Your Choice: ");
-            staffChoice = staffMenu_input.nextInt();
+                System.out.println("0. Log Out");
+                System.out.print("Enter Your Choice: ");
+                try {
+                    staffChoice = staffMenu_input.nextInt();
+                    validInput = true;
+                } catch (java.util.InputMismatchException e) {
+                    // Handle the exception if the input is not an integer
+                    System.out.println("Invalid input. Please enter an integer.");
+                    staffMenu_input.nextLine();
+                }
+            }
 
             if (validationChoice == 0) {
                 if (staffChoice < 0 || staffChoice > 6) {
@@ -181,10 +201,21 @@ public class StaffDriver {
         ArrayList<String> displayAddStaffArray = new ArrayList<>();
         ArrayList<Staff> staffArray = new ArrayList<>();
         Staff newStaff = new Staff();
+        int staffAddIn = 0;
+        boolean validInput = false;
 
-        System.out.print("\nHow many staff you want to add in(0 for exit): ");
-        int staffAddIn = addStaff_input.nextInt();
-        addStaff_input.nextLine();
+        while (!validInput) {
+            System.out.print("\nHow many staff you want to add in(0 for exit): ");
+            try {
+                staffAddIn = addStaff_input.nextInt();
+                validInput = true;
+                addStaff_input.nextLine();
+            } catch (java.util.InputMismatchException e) {
+                // Handle the exception if the input is not an integer
+                System.out.println("Invalid input. Please enter an integer.");
+                addStaff_input.nextLine();
+            }
+        }
 
         if (staffAddIn != 0) {
             for (int i = 0; i < staffAddIn; i++) {
@@ -225,26 +256,37 @@ public class StaffDriver {
                 } while (!staff.validateNewIcNum(newStaff.getIcNum(), newStaff.getDateOfBirth()));
 
                 int validatePosition = 0;
+                validInput = false;
+                int staffPositionChoice = 0;
                 do {
-                    System.out.println("\n\tStaff Position: ");
-                    System.out.println("\t\t1. Cashier");
-                    System.out.println("\t\t2. Admin");
-                    System.out.print("\t\tEnter Your Choice: ");
-                    int staffPositionChoice = addStaff_input.nextInt();
-                    addStaff_input.nextLine();
+                    while (!validInput) {
+                        System.out.println("\n\tStaff Position: ");
+                        System.out.println("\t\t1. Cashier");
+                        System.out.println("\t\t2. Admin");
+                        System.out.print("\t\tEnter Your Choice: ");
+                        try {
+                            staffPositionChoice = addStaff_input.nextInt();
+                            validInput = true;
+                            addStaff_input.nextLine();
+                        } catch (java.util.InputMismatchException e) {
+                            // Handle the exception if the input is not an integer
+                            System.out.println("Invalid input. Please enter an integer.");
+                            addStaff_input.nextLine();
+                        }
 
-                    switch (staffPositionChoice) {
-                        case 1:
-                            newStaff.setPosition("Cashier");
-                            validatePosition = 1;
-                            break;
-                        case 2:
-                            newStaff.setPosition("Admin");
-                            validatePosition = 1;
-                            break;
-                        default:
-                            System.out.println("\nInvalid Input! Please follow the menu given!");
-                            break;
+                        switch (staffPositionChoice) {
+                            case 1:
+                                newStaff.setPosition("Cashier");
+                                validatePosition = 1;
+                                break;
+                            case 2:
+                                newStaff.setPosition("Admin");
+                                validatePosition = 1;
+                                break;
+                            default:
+                                System.out.println("\nInvalid Input! Please follow the menu given!");
+                                break;
+                        }
                     }
                 } while (validatePosition == 0);
 
@@ -267,14 +309,26 @@ public class StaffDriver {
 
             System.out.println("===================================================================================================================================================================================================================");
 
-            System.out.print("\n\nConfirm to add in?(1 = yes, other = no) : ");
-            int confirmation = addStaff_input.nextInt();
-
-            if (confirmation == 1) {
+            int confirmation = 0;
+            validInput = false;
+            
+            while (!validInput) {
+                System.out.print("\n\nConfirm to add in?(1 = yes, other = no) : ");
                 try {
-                    staff.addStaffToDatabase(staffArray);
-                } catch (ClassNotFoundException | SQLException e) {
-                    throw new RuntimeException(e);
+                    confirmation = addStaff_input.nextInt();
+                    validInput = true;
+                } catch (java.util.InputMismatchException e) {
+                    // Handle the exception if the input is not an integer
+                    System.out.println("Invalid input. Please enter an integer.");
+                    addStaff_input.nextLine();
+                }
+
+                if (confirmation == 1) {
+                    try {
+                        staff.addStaffToDatabase(staffArray);
+                    } catch (ClassNotFoundException | SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
@@ -317,9 +371,20 @@ public class StaffDriver {
                     System.out.println("\t0. Back and Save");
                 }
 
-                System.out.print("Enter Your Choice: ");
-                editChoice = editStaff_input.nextInt();
-                editStaff_input.nextLine();
+                boolean validInput = false;
+                
+                while (!validInput) {
+                    System.out.print("Enter Your Choice: ");
+                    try {
+                        editChoice = editStaff_input.nextInt();
+                        validInput = true;
+                        editStaff_input.nextLine();
+                    } catch (java.util.InputMismatchException e) {
+                        // Handle the exception if the input is not an integer
+                        System.out.println("Invalid input. Please enter an integer.");
+                        editStaff_input.nextLine();
+                    }
+                }
 
                 if (editChoice >= 0 && editChoice <= 8) {
                     switch (editChoice) {
@@ -341,25 +406,35 @@ public class StaffDriver {
                         case 3:
                             System.out.println("Current Position: " + currentData.getPosition());
                             int validatePosition = 0;
+                            int staffPositionChoice = 0;
+                            validInput = false;
                             do {
-                                System.out.println("Staff Position: ");
-                                System.out.println("\t1. Cashier");
-                                System.out.println("\t2. Admin");
-                                System.out.print("\tEnter Your Choice: ");
-                                int staffPositionChoice = editStaff_input.nextInt();
-
-                                switch (staffPositionChoice) {
-                                    case 1:
-                                        newStaff.setPosition("Cashier");
-                                        validatePosition = 1;
-                                        break;
-                                    case 2:
-                                        newStaff.setPosition("Admin");
-                                        validatePosition = 1;
-                                        break;
-                                    default:
-                                        System.out.println("\nInvalid Input! Please follow the menu given!");
-                                        break;
+                                while (!validInput) {
+                                    System.out.println("Staff Position: ");
+                                    System.out.println("\t1. Cashier");
+                                    System.out.println("\t2. Admin");
+                                    System.out.print("\tEnter Your Choice: ");
+                                    try {
+                                        staffPositionChoice = editStaff_input.nextInt();
+                                        validInput = true;
+                                    } catch (java.util.InputMismatchException e) {
+                                        // Handle the exception if the input is not an integer
+                                        System.out.println("Invalid input. Please enter an integer.");
+                                        editStaff_input.nextLine();
+                                    }
+                                    switch (staffPositionChoice) {
+                                        case 1:
+                                            newStaff.setPosition("Cashier");
+                                            validatePosition = 1;
+                                            break;
+                                        case 2:
+                                            newStaff.setPosition("Admin");
+                                            validatePosition = 1;
+                                            break;
+                                        default:
+                                            System.out.println("\nInvalid Input! Please follow the menu given!");
+                                            break;
+                                    }
                                 }
                             } while (validatePosition == 0);
                             changeMenu = 1;
@@ -424,11 +499,22 @@ public class StaffDriver {
 
                                 System.out.println("\n=========================================================================================================================================================================");
 
-                                System.out.print("\nConfirm Change?(1 = Yes, other = No): ");
-                                int confirmChange = editStaff_input.nextInt();
+                                validInput = false;
+                                int confirmChange = 0;
+                                while (!validInput) {
+                                    System.out.print("\nConfirm Change?(1 = Yes, other = No): ");
+                                    try {
+                                        confirmChange = editStaff_input.nextInt();
+                                        validInput = true;
+                                    } catch (java.util.InputMismatchException e) {
+                                        // Handle the exception if the input is not an integer
+                                        System.out.println("Invalid input. Please enter an integer.");
+                                        editStaff_input.nextLine();
+                                    }
 
-                                if (confirmChange == 1) {
-                                    staff.updateEditedStaff(currentData.getIcNum(), editedStaff);
+                                    if (confirmChange == 1) {
+                                        staff.updateEditedStaff(currentData.getIcNum(), editedStaff);
+                                    }
                                 }
                             }
                             break;
@@ -437,11 +523,15 @@ public class StaffDriver {
                     System.out.println("Invalid input! Please follow the menu given!");
                 }
             }
+            else {
+                editChoice = 0;
+            }
         }while (editChoice != 0);
+        displayStaff();
     }
 
     private static Staff getStaff(String editStaffId) {
-        Staff currentData = null;
+        Staff currentData = new Staff();
         ArrayList<Staff> staffDatabase;
         try {
             staffDatabase = staff.getStaffDatabase();
@@ -483,15 +573,26 @@ public class StaffDriver {
                 }
             }
 
-            if (deleteId.charAt(0) != '0' && deleteId.equals(staff.getStaffId())) {
+            if (deleteId.charAt(0) != '0' && !deleteId.equals(staff.getStaffId())) {
                 System.out.println("===========================================================================================================================================================================================================================");
                 System.out.printf("||%-5s||%-30s||%-20s||%-6s||%-14s||%-12s||%-100s||%-14s||\n", "Id", "Name", "Position", "Gender", "Birth Date", "Phone Number", "Address", "IC Number");
                 System.out.println("===========================================================================================================================================================================================================================");
                 System.out.printf("||%-5s||%-30s||%-20s||%-6s||%-14s||%-12s||%-100s||%-14s||\n", deleteStaff.getStaffId(), deleteStaff.getName(), deleteStaff.getPosition(), deleteStaff.getGender(), deleteStaff.getDateOfBirth(), deleteStaff.getPhoneNumber(), deleteStaff.getAddress(), deleteStaff.getIcNum());
                 System.out.println("===========================================================================================================================================================================================================================");
 
-                System.out.print("\nConfirm to delete?(1 = Yes, other = No): ");
-                int confirmDelete = deleteStaff_input.nextInt();
+                int confirmDelete = 0;
+                boolean validInput = false;
+                while (!validInput) {
+                    System.out.print("\nConfirm to delete?(1 = Yes, other = No): ");
+                    try {
+                        confirmDelete = deleteStaff_input.nextInt();
+                        validInput = true;
+                    } catch (java.util.InputMismatchException e) {
+                        // Handle the exception if the input is not an integer
+                        System.out.println("Invalid input. Please enter an integer.");
+                        deleteStaff_input.nextLine();
+                    }
+                }
 
                 if (confirmDelete == 1) {
                     try {
@@ -500,11 +601,12 @@ public class StaffDriver {
                         throw new RuntimeException(e);
                     }
                 }
-            } else if (!deleteId.equals(staff.getStaffId())) {
+            } else if (deleteId.equals(staff.getStaffId())) {
                 System.out.println("You can't delete yourself!");
                 deleteLoop = 0;
             }
         }while (deleteLoop == 0);
+        displayStaff();
     }
 
     public static void changePassword() {
@@ -533,5 +635,6 @@ public class StaffDriver {
                 break;
             }
         }
+        staffMenu(staff.getStaffId());
     }
 }
